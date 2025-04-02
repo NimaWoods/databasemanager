@@ -1,47 +1,46 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
+import {NgFor, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {ConnectionService} from '../../../services/ConnectionService';
-import {PostgresConnection} from '../../../interfaces/PostgresConnection';
-import {NgForOf, NgIf} from '@angular/common';
+import {ConnectionService, PostgresConnection} from '../../../services/ConnectionService';
 
 @Component({
   selector: 'connection-list',
   templateUrl: './connection-list.component.html',
-  imports: [
-    FormsModule,
-    NgIf,
-    NgForOf
-  ],
-  styleUrls: ['./connection-list.component.scss']
+  standalone: true,
+  imports: [FormsModule, NgIf, NgFor], // falls du standalone nutzt
 })
-export class ConnectionListComponent implements OnInit {
+export class ConnectionListComponent {
   connections: PostgresConnection[] = [];
   selectedConnection?: PostgresConnection;
 
-  constructor(private connectionService: ConnectionService) {}
+  private connectionService = new ConnectionService();
 
-  ngOnInit(): void {
+  constructor() {
+    this.loadConnections();
+  }
+
+  loadConnections() {
     this.connections = this.connectionService.getAllConnections();
   }
 
-  editConnection(conn: PostgresConnection): void {
-    this.selectedConnection = { ...conn };
+  editConnection(conn: PostgresConnection) {
+    this.selectedConnection = structuredClone(conn);
   }
 
-  saveConnection(): void {
+  saveConnection() {
     if (this.selectedConnection) {
       this.connectionService.saveConnection(this.selectedConnection);
-      this.connections = this.connectionService.getAllConnections();
+      this.loadConnections();
       this.selectedConnection = undefined;
     }
   }
 
-  cancelEdit(): void {
-    this.selectedConnection = undefined;
+  deleteConnection(name: string) {
+    this.connectionService.deleteConnection(name);
+    this.loadConnections();
   }
 
-  deleteConnection(name: string): void {
-    this.connectionService.deleteConnection(name);
-    this.connections = this.connectionService.getAllConnections();
+  cancelEdit() {
+    this.selectedConnection = undefined;
   }
 }

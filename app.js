@@ -2,6 +2,12 @@ const {app, BrowserWindow} = require('electron')
 const url = require("url");
 const path = require("path");
 
+try {
+  require('electron-reloader')(module);
+} catch (_) {
+  console.log('electron-reloader konnte nicht geladen werden – ignoriere im Prod');
+}
+
 let mainWindow
 
 function createWindow () {

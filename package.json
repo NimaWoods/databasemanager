@@ -14,7 +14,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "^19.2.0",
+    "@angular/common": "19.2.0",
     "@angular/compiler": "^19.2.0",
     "@angular/core": "^19.2.0",
     "@angular/forms": "^19.2.0",
@@ -36,6 +36,7 @@
     "@types/node": "^22.13.17",
     "electron": "^35.1.2",
     "electron-builder": "^24.13.3",
+    "electron-reloader": "^1.2.3",
     "jasmine-core": "~5.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",

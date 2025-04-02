@@ -1,62 +1,43 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import {PostgresConnection} from '../interfaces/PostgresConnection';
+export interface PostgresConnection {
+  name: string;
+  host: string;
+  port: number;
+  user: string;
+  password: string;
+  database: string;
+  isProductive: boolean;
+  isOnlyDumps: boolean;
 
-const DEFAULT_CONNECTION: Partial<PostgresConnection> = {
-  port: 5432,
-  isProductive: false,
-  isOnlyDumps: false,
-};
+  preferredFilename?: string;
+  Schema?: string;
+  excludeTables?: string[];
+  includeBlobs?: boolean;
+  includeDateSuffix?: boolean;
+}
+
+const STORAGE_KEY = 'db-connections';
 
 export class ConnectionService {
-  private filePath: string;
-
-  constructor(filename: string = 'connections.json') {
-    this.filePath = path.resolve(__dirname, filename);
-    if (!fs.existsSync(this.filePath)) {
-      fs.writeFileSync(this.filePath, '[]');
-    }
-  }
-
-  private readConnections(): PostgresConnection[] {
-    const data = fs.readFileSync(this.filePath, 'utf-8');
-    return JSON.parse(data);
-  }
-
-  private writeConnections(connections: PostgresConnection[]): void {
-    fs.writeFileSync(this.filePath, JSON.stringify(connections, null, 2));
-  }
-
   public getAllConnections(): PostgresConnection[] {
-    return this.readConnections();
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
   }
 
-  public saveConnection(connection: Partial<PostgresConnection> & { name: string }): void {
-    const connections = this.readConnections();
-    const existingIndex = connections.findIndex(c => c.name === connection.name);
+  public saveConnection(connection: PostgresConnection): void {
+    const connections = this.getAllConnections();
+    const index = connections.findIndex(c => c.name === connection.name);
 
-    const fullConnection: PostgresConnection = {
-      host: connection.host || 'localhost',
-      port: connection.port ?? DEFAULT_CONNECTION.port!,
-      user: connection.user || 'postgres',
-      password: connection.password || '',
-      database: connection.database || '',
-      isProductive: connection.isProductive ?? DEFAULT_CONNECTION.isProductive!,
-      isOnlyDumps: connection.isOnlyDumps ?? DEFAULT_CONNECTION.isOnlyDumps!,
-      name: connection.name,
-    };
-
-    if (existingIndex >= 0) {
-      connections[existingIndex] = fullConnection;
+    if (index >= 0) {
+      connections[index] = connection;
     } else {
-      connections.push(fullConnection);
+      connections.push(connection);
     }
 
-    this.writeConnections(connections);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(connections));
   }
 
   public deleteConnection(name: string): void {
-    const connections = this.readConnections().filter(c => c.name !== name);
-    this.writeConnections(connections);
+    const filtered = this.getAllConnections().filter(c => c.name !== name);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
   }
 }
