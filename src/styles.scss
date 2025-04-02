@@ -1,0 +1,127 @@
+/* global styles */
+
+@use "sass:color";
+
+// === Farben ===
+$primary: #247963;
+$primary-dark: color.adjust($primary, $lightness: -10%);
+$primary-light: color.adjust($primary, $lightness: 15%);
+$background: #f4f4f4;
+$text-color: #222;
+$text-light: #666;
+$white: #fff;
+
+// === Layout-Variablen ===
+$navbar-height: 60px;
+
+// === Schriftarten ===
+$font-stack: 'Segoe UI', Roboto, sans-serif;
+
+// === Layout ===
+html, body {
+  font-family: $font-stack;
+  background-color: $background;
+  color: $text-color;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+// Fix für Electron-Rendering
+html {
+  background-color: $background !important;
+}
+
+// Stelle sicher, dass der Root-Container die volle Größe einnimmt
+app-root {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background-color: $background;
+}
+
+// === Navbar ===
+.navbar {
+  background-color: $primary;
+  color: $white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  a {
+    color: $white;
+    text-decoration: none;
+    margin: 0 1rem;
+    font-weight: 500;
+
+    &:hover {
+      color: $primary-light;
+    }
+  }
+}
+
+// === Button ===
+.button {
+  background-color: $primary;
+  color: $white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: $primary-dark;
+  }
+
+  &--secondary {
+    background-color: $white;
+    color: $primary;
+    border: 1px solid $primary;
+
+    &:hover {
+      background-color: $primary-light;
+      color: $white;
+    }
+  }
+}
+
+// === Input ===
+input[type=text] {
+  background-color: white;
+}
+
+// === Card / Panel ===
+.card {
+  background-color: $white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+// === Tables ===
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: $white;
+
+  th, td {
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+
+  th {
+    background-color: $primary;
+    color: $white;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+}

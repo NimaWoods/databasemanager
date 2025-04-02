@@ -1,0 +1,25 @@
+@use '../styles.scss' as globals;
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: globals.$background;
+}
+
+.content-container {
+  display: flex;
+  flex: 1;
+  margin-top: globals.$navbar-height;
+  overflow: hidden;
+  position: relative;
+}
+
+.main-content {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  background-color: globals.$background;
+}

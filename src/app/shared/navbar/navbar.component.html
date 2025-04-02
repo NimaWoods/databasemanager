@@ -1,0 +1,66 @@
+<nav class="navbar">
+  <div class="app-title">TPS DB Manager</div>
+
+  <div class="navbar-icons">
+    <div
+      class="nav-icon"
+      [ngClass]="{'active': isActiveRoute('home')}"
+      title="home"
+      routerLink="/home"
+    >
+      <i class="fas fa-home"></i>
+    </div>
+
+    <div
+      class="nav-icon"
+      [ngClass]="{'active': isActiveRoute('manage')}"
+      title="Manage Connections"
+      routerLink="/manage"
+    >
+      <i class="fas fa-server"></i>
+    </div>
+
+    <div
+      class="nav-icon"
+      [ngClass]="{'active': isActiveRoute('create')}"
+      title="Create Database"
+      routerLink="/create"
+    >
+      <i class="fas fa-database"></i>
+    </div>
+
+    <div
+      class="nav-icon"
+      [ngClass]="{'active': isActiveRoute('dump')}"
+      title="Dump erstellen"
+      routerLink="/dump"
+    >
+      <i class="fas fa-database"></i>
+    </div>
+
+    <div
+      class="nav-icon"
+      [ngClass]="{'active': isActiveRoute('restore')}"
+      title="Dump wiederherstellen"
+      routerLink="/restore"
+    >
+      <i class="fas fa-database"></i>
+    </div>
+
+    <div class="nav-icon" [ngClass]="{'active': isActiveRoute('logs')}" title="Logs"
+         routerLink="/logs">
+      <i class="fas fa-clipboard-list"></i>
+    </div>
+  </div>
+
+  <div class="navbar-right">
+    <div
+      class="nav-icon"
+      [ngClass]="{'active': isActiveRoute('settings')}"
+      title="Settings"
+      routerLink="/settings"
+    >
+      <i class="fas fa-cog"></i>
+    </div>
+  </div>
+</nav>

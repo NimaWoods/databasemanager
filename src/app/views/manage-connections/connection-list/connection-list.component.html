@@ -1,0 +1,42 @@
+<div class="connection-list">
+  <h2>Verfügbare Verbindungen</h2>
+  <ul>
+    <li *ngFor="let conn of connections">
+      <strong>{{ conn.name }}</strong> ({{ conn.host }}:{{ conn.port }})
+      <button (click)="editConnection(conn)">Bearbeiten</button>
+      <button (click)="deleteConnection(conn.name)">Löschen</button>
+    </li>
+  </ul>
+
+  <div *ngIf="selectedConnection">
+    <h3>Bearbeite: {{ selectedConnection.name }}</h3>
+    <form (ngSubmit)="saveConnection()">
+      <label>
+        Host:
+        <input [(ngModel)]="selectedConnection.host" name="host" />
+      </label>
+      <label>
+        Port:
+        <input type="number" [(ngModel)]="selectedConnection.port" name="port" />
+      </label>
+      <label>
+        User:
+        <input [(ngModel)]="selectedConnection.user" name="user" />
+      </label>
+      <label>
+        Datenbank:
+        <input [(ngModel)]="selectedConnection.database" name="database" />
+      </label>
+      <label>
+        Produktiv:
+        <input type="checkbox" [(ngModel)]="selectedConnection.isProductive" name="isProductive" />
+      </label>
+      <label>
+        Nur Dump:
+        <input type="checkbox" [(ngModel)]="selectedConnection.isOnlyDumps" name="isOnlyDumps" />
+      </label>
+      <button type="submit">Speichern</button>
+      <button type="button" (click)="cancelEdit()">Abbrechen</button>
+    </form>
+  </div>
+</div>

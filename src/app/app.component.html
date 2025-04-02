@@ -1,0 +1,14 @@
+<div *ngIf="isLoading">
+  <app-loading/>
+</div>
+
+<div *ngIf="!isLoading" class="app-container">
+  <app-navbar/>
+  <div class="content-container">
+    <app-sidebar (collapsedChange)="onSidebarCollapsed($event)"></app-sidebar>
+    <main class="main-content">
+      <router-outlet/>
+    </main>
+  </div>
+</div>
+

@@ -1,0 +1,76 @@
+@use '../../../styles.scss' as globals;
+
+:host {
+  display: block;
+  width: 100%;
+  height: globals.$navbar-height;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 2rem;
+  height: 100%;
+  background-color: globals.$primary;
+  color: globals.$white;
+  width: 100%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.app-title {
+  font-weight: 600;
+  font-size: 1.2rem;
+  min-width: 150px;
+}
+
+.navbar-icons {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 0 auto;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  min-width: 60px;
+  justify-content: flex-end;
+}
+
+.nav-icon {
+  color: globals.$white;
+  font-size: 1.25rem;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+
+  &.active {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-icons {
+    gap: 0.8rem;
+  }
+
+  .app-title {
+    display: none;
+  }
+}
