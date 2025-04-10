@@ -33,7 +33,13 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "fs",
+              "path",
+              "os",
+              "module"
+            ]
           },
           "configurations": {
             "production": {

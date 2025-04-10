@@ -1,10 +1,12 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
 import {filter} from 'rxjs/operators';
 import {NavbarComponent} from './shared/navbar/navbar.component';
 import {SidebarComponent} from './shared/sidebar/sidebar.component';
 import {LoadingComponent} from './shared/loading/loading.component';
 import {NgIf} from '@angular/common';
+import {LogService} from './services/LogService';
+import {LogLevel} from '@angular/compiler-cli';
 
 @Component({
   selector: 'app-root',
@@ -13,42 +15,31 @@ import {NgIf} from '@angular/common';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  title = 'W-DBM';
+export class AppComponent implements OnInit {
+  title = 'TPS DB Manager';
   isSidebarCollapsed = true;
   isLoading = true;
   routeName = '';
 
-  constructor(private router: Router) {
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.isLoading = false;
-      });
+  constructor(private router: Router, private logService: LogService) {
+  }
 
-    this.router.events.subscribe(event => {
+  ngOnInit() {
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
       if (event instanceof NavigationEnd) {
+        this.isLoading = false;
         this.updateRouteName(event.urlAfterRedirects);
+        this.logService.addLog(`Application initiated. Navigated to: ${event.urlAfterRedirects}`, LogLevel.info);
       }
     });
   }
 
-  updateRouteName(url: string) {
-    if (url === '/home') {
-      this.routeName = 'Home';
-    } else {
-      this.routeName = '';
-    }
-  }
-
-  getRouteName(): string {
-    return this.routeName;
+  private updateRouteName(url: string) {
+    this.routeName = url === '/home' ? 'Home' : '';
   }
 
   onSidebarCollapsed(isCollapsed: boolean) {
     this.isSidebarCollapsed = isCollapsed;
-    isCollapsed
-      ? document.body.classList.add('sidebar-collapsed')
-      : document.body.classList.remove('sidebar-collapsed');
+    document.body.classList.toggle('sidebar-collapsed', isCollapsed);
   }
 }

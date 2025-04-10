@@ -5,54 +5,22 @@ require('electron-reload')(__dirname, {
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
+const { ipcMain } = require('electron');
 const fs = require('fs');
 
 let win;
 let javaBackendProcess = null;
-
-// Funktion zum Starten des Java-Backends
-function startJavaBackend() {
-  console.log('Starting Java backend...');
-  
-  // Prüfe, ob die JAR-Datei existiert
-  const jarPath = path.join(__dirname, '../backend/target/backend-1.0-SNAPSHOT.jar');
-  
-  if (!fs.existsSync(jarPath)) {
-    console.error('Java backend JAR file not found:', jarPath);
-    console.log('Please build the backend first with: mvn clean package');
-    return;
-  }
-  
-  // Starte das Java-Backend mit der JAR-Datei
-  javaBackendProcess = spawn('java', ['-jar', jarPath], {
-    stdio: 'pipe' // Umleiten der Ausgabe
-  });
-  
-  // Ausgabe des Java-Prozesses in der Konsole anzeigen
-  javaBackendProcess.stdout.on('data', (data) => {
-    console.log(`Java Backend: ${data}`);
-  });
-  
-  javaBackendProcess.stderr.on('data', (data) => {
-    console.error(`Java Backend Error: ${data}`);
-  });
-  
-  javaBackendProcess.on('close', (code) => {
-    console.log(`Java Backend process exited with code ${code}`);
-    javaBackendProcess = null;
-  });
-}
 
 function createWindow() {
   win = new BrowserWindow({
     width: 1200,
     height: 800,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
     },
-    backgroundColor: '#f4f4f4', // Hintergrundfarbe entsprechend der Angular-App
-    icon: path.join(__dirname, '../public/favicon.ico'), // Icon für das Electron-Fenster
+    backgroundColor: '#f4f4f4',
+    icon: path.join(__dirname, '../public/favicon.ico')
   });
 
   win.maximize();
@@ -60,11 +28,11 @@ function createWindow() {
   // Korrigierter Pfad zur Angular-Anwendung
   // Prüfe, ob wir im Entwicklungsmodus sind
   const isDev = process.env.NODE_ENV === 'development';
-  
+
   if (isDev) {
     // Im Entwicklungsmodus: Lade von localhost
     win.loadURL('http://localhost:4200');
-    
+
     // DevTools im Entwicklungsmodus öffnen
     win.webContents.openDevTools();
   } else {
@@ -72,12 +40,12 @@ function createWindow() {
     // Korrigiere den Pfad entsprechend deiner Angular-Ausgabe
     win.loadFile(path.join(__dirname, '../dist/w-dbm/browser/index.html'));
   }
-  
+
   // Verhindere weißes Flackern beim Laden
   win.on('ready-to-show', () => {
     win.show();
   });
-  
+
   // Beende das Java-Backend, wenn das Fenster geschlossen wird
   win.on('closed', () => {
     if (javaBackendProcess) {
@@ -90,10 +58,12 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  // Starte das Java-Backend
-  startJavaBackend();
-  
-  // Erstelle das Electron-Fenster
+  ipcMain.on('write-log', (event, message) => {
+    fs.appendFile('logs.txt', message + '\n', (err) => {
+      if (err) console.error('Error writing log:', err);
+    });
+  });
+
   createWindow();
 });
 
